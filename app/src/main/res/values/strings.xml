@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ManZone</string>
+    <string name="intro">Discover the Elegance of Timeless Jewelry</string>
+    <string name="subtitle">Where Beauty Meets Craftsmanship - Adorn Yourself with the Finest Pieces</string>
+    <string name="intro_signin">Already have an account? <b>Sign In</b></string>
+    <string name="intro_signup">Don\'t have account? <b>Sign Up</b></string>
+</resources>
