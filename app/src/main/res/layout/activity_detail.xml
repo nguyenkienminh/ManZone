@@ -157,61 +157,114 @@
                 android:text="Description"
                 android:textColor="@color/black" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:background="@android:color/white"
-                android:gravity="center_vertical"
-                android:layout_margin="8dp">
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:padding="16dp"-->
+<!--                android:background="@android:color/white"-->
+<!--                android:gravity="center_vertical"-->
+<!--                android:layout_margin="8dp">-->
 
-                <ImageView
-                    android:id="@+id/btnPlus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/plus"
-                    android:layout_marginEnd="8dp"/>
+<!--                <ImageView-->
+<!--                    android:id="@+id/btnMinus"-->
+<!--                    android:layout_width="36dp"-->
+<!--                    android:layout_height="36dp"-->
+<!--                    android:layout_marginEnd="8dp"-->
+<!--                    app:srcCompat="@drawable/minus" />-->
 
-                <EditText
-                    android:id="@+id/etQuantity"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="number"
-                    android:padding="8dp"
-                    android:background="@drawable/edittext_background" />
+<!--                <EditText-->
+<!--                    android:id="@+id/etQuantity"-->
+<!--                    android:layout_width="50dp"-->
+<!--                    android:layout_height="36dp"-->
+<!--                    android:gravity="center"-->
+<!--                    android:inputType="number"-->
+<!--                    android:text="1"-->
+<!--                    android:background="@drawable/edittext_background"-->
+<!--                    android:textSize="16sp"-->
+<!--                    android:layout_marginEnd="8dp" />-->
 
-                <ImageView
-                    android:id="@+id/btnMinus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/minus"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"/>
+<!--                <ImageView-->
+<!--                    android:id="@+id/btnPlus"-->
+<!--                    android:layout_width="36dp"-->
+<!--                    android:layout_height="36dp"-->
+<!--                    android:layout_marginEnd="8dp"-->
+<!--                    app:srcCompat="@drawable/plus" />-->
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnAddToCart"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Add to Cart"
-                    style="@android:style/Widget.Button"
-                    android:background="@drawable/black_bg"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    android:layout_margin="8dp"
-                    android:padding="10dp"/>
+<!--                <androidx.appcompat.widget.AppCompatButton-->
+<!--                    android:id="@+id/btnAddToCart"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="40dp"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:text="Add to Cart"-->
+<!--                    android:background="@drawable/black_bg"-->
+<!--                    android:textColor="@color/white"-->
+<!--                    android:textSize="16sp"-->
+<!--                    android:layout_marginEnd="8dp" />-->
 
-                <ImageView
-                    android:id="@+id/btnCart"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    app:srcCompat="@drawable/cart2" />
-            </LinearLayout>
+<!--                <ImageView-->
+<!--                    android:id="@+id/btnCart"-->
+<!--                    android:layout_width="36dp"-->
+<!--                    android:layout_height="36dp"-->
+<!--                    app:srcCompat="@drawable/cart2" />-->
+<!--            </LinearLayout>-->
 
         </LinearLayout>
     </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/layoutAddToCart"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:background="@android:color/white"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/btnMinus"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="8dp"
+            app:srcCompat="@drawable/minus" />
+
+        <EditText
+            android:id="@+id/etQuantity"
+            android:layout_width="50dp"
+            android:layout_height="36dp"
+            android:gravity="center"
+            android:inputType="number"
+            android:text="1"
+            android:background="@drawable/edittext_background"
+            android:textSize="16sp"
+            android:layout_marginEnd="8dp" />
+
+        <ImageView
+            android:id="@+id/btnPlus"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="8dp"
+            app:srcCompat="@drawable/plus" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnAddToCart"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:text="Add to Cart"
+            android:background="@drawable/black_bg"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:layout_marginEnd="8dp" />
+
+        <ImageView
+            android:id="@+id/btnCart"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            app:srcCompat="@drawable/cart2" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
