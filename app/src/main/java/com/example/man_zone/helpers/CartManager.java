@@ -75,20 +75,14 @@ public class CartManager {
     public void addToCart(CartItem newItem) {
         boolean itemExists = false;
 
-        // Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng chưa bằng productId
         for (CartItem existingItem : cartItems) {
-            if (existingItem.getProductId() != null &&
-                    newItem.getProductId() != null &&
-                    existingItem.getProductId().equals(newItem.getProductId())) {
-
-                // Cập nhật số lượng và tính lại tổng giá
+            if (existingItem.getProductId() == newItem.getProductId()) {
                 existingItem.setQuantity(existingItem.getQuantity() + newItem.getQuantity());
                 itemExists = true;
                 break;
             }
         }
 
-        // Nếu sản phẩm chưa có trong giỏ hàng, thêm mới
         if (!itemExists) {
             cartItems.add(newItem);
         }
@@ -98,22 +92,13 @@ public class CartManager {
     }
 
     public void removeFromCart(CartItem itemToRemove) {
-        // Xóa item dựa trên productId
-        cartItems.removeIf(item ->
-                item.getProductId() != null &&
-                        itemToRemove.getProductId() != null &&
-                        item.getProductId().equals(itemToRemove.getProductId())
-        );
+        cartItems.removeIf(item -> item.getProductId() == itemToRemove.getProductId());
         saveCart();
     }
 
     public void updateItemQuantity(CartItem itemToUpdate, int quantity) {
-        // Cập nhật số lượng dựa trên productId
         for (CartItem item : cartItems) {
-            if (item.getProductId() != null &&
-                    itemToUpdate.getProductId() != null &&
-                    item.getProductId().equals(itemToUpdate.getProductId())) {
-
+            if (item.getProductId() == itemToUpdate.getProductId()) {
                 item.setQuantity(quantity);
                 break;
             }
@@ -121,12 +106,11 @@ public class CartManager {
         saveCart();
     }
 
-    // Find item in cart by productId
-    public CartItem findCartItemById(UUID productId) {
-        if (productId == null) return null;
 
+    // Find item in cart by productId
+    public CartItem findCartItemById(int productId) {
         for (CartItem item : cartItems) {
-            if (item.getProductId() != null && item.getProductId().equals(productId)) {
+            if (item.getProductId() == productId) {
                 return item;
             }
         }

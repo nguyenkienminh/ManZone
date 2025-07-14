@@ -1,58 +1,41 @@
 package com.example.man_zone.Model;
 
 import java.io.Serializable;
-import java.util.UUID;
+import java.util.List;
 
 public class ProductModel implements Serializable {
-    private UUID productId;
+    private int id;
     private String name;
-    private String barcode;
-    private double manufactureCost;
-    private double weight;
-    private int quantity;
     private String description;
-    private int counterId;
-    private int typeId;
-    private String img;
-    private String certificateUrl;
-    private ProductStatuses productStatus;
     private double price;
-    private double markupRate;
-    private Units weightUnit;
-    private double stonePrice;
+    private List<String> imageUrls;
+    private CategoryModel category;
 
-    public ProductModel(String name, double price, String description, String img) {
+    // Constructor
+    public ProductModel(int id, String name, String description, double price, List<String> imageUrls, CategoryModel category) {
+        this.id = id;
         this.name = name;
-        this.price = price;
         this.description = description;
-        this.img = img;
-    }
-    public ProductModel(UUID productId,String name, double price, String description, String img) {
-        this.productId = productId;
-        this.name = name;
         this.price = price;
-        this.description = description;
-        this.img = img;
+        this.imageUrls = imageUrls;
+        this.category = category;
     }
 
-    // Enum for Units
-    public enum Units {
-        g,
-        ct
+    // Getters & Setters
+
+    public String getMainImage() {
+        if (imageUrls != null && !imageUrls.isEmpty()) {
+            return imageUrls.get(0);
+        }
+        return ""; // Hoặc trả về ảnh default nếu muốn
     }
 
-    // Enum for ProductStatuses
-    public enum ProductStatuses {
-        Active,
-        Deactive
+    public int getId() {
+        return id;
     }
 
-    public UUID getProductId() {
-        return productId;
-    }
-
-    public void setProductId(UUID productId) {
-        this.productId = productId;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -63,84 +46,12 @@ public class ProductModel implements Serializable {
         this.name = name;
     }
 
-    public String getBarcode() {
-        return barcode;
-    }
-
-    public void setBarcode(String barcode) {
-        this.barcode = barcode;
-    }
-
-    public double getManufactureCost() {
-        return manufactureCost;
-    }
-
-    public void setManufactureCost(double manufactureCost) {
-        this.manufactureCost = manufactureCost;
-    }
-
-    public double getWeight() {
-        return weight;
-    }
-
-    public void setWeight(double weight) {
-        this.weight = weight;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public int getCounterId() {
-        return counterId;
-    }
-
-    public void setCounterId(int counterId) {
-        this.counterId = counterId;
-    }
-
-    public int getTypeId() {
-        return typeId;
-    }
-
-    public void setTypeId(int typeId) {
-        this.typeId = typeId;
-    }
-
-    public String getImg() {
-        return img;
-    }
-
-    public void setImg(String img) {
-        this.img = img;
-    }
-
-    public String getCertificateUrl() {
-        return certificateUrl;
-    }
-
-    public void setCertificateUrl(String certificateUrl) {
-        this.certificateUrl = certificateUrl;
-    }
-
-    public ProductStatuses getProductStatus() {
-        return productStatus;
-    }
-
-    public void setProductStatus(ProductStatuses productStatus) {
-        this.productStatus = productStatus;
     }
 
     public double getPrice() {
@@ -151,30 +62,19 @@ public class ProductModel implements Serializable {
         this.price = price;
     }
 
-    public double getMarkupRate() {
-        return markupRate;
+    public List<String> getImageUrls() {
+        return imageUrls;
     }
 
-    public void setMarkupRate(double markupRate) {
-        this.markupRate = markupRate;
+    public void setImageUrls(List<String> imageUrls) {
+        this.imageUrls = imageUrls;
     }
 
-    public Units getWeightUnit() {
-        return weightUnit;
+    public CategoryModel getCategory() {
+        return category;
     }
 
-    public void setWeightUnit(Units weightUnit) {
-        this.weightUnit = weightUnit;
+    public void setCategory(CategoryModel category) {
+        this.category = category;
     }
-
-    public double getStonePrice() {
-        return stonePrice;
-    }
-
-    public void setStonePrice(double stonePrice) {
-        this.stonePrice = stonePrice;
-    }
-
-
-
 }

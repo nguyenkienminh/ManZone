@@ -20,9 +20,9 @@
             <ImageView
                 android:id="@+id/imageViewLogo"
                 android:layout_width="match_parent"
-                android:layout_height="332dp"
+                android:layout_height="300dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/logo" />
+                android:src="@drawable/manzonelogo" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -33,13 +33,24 @@
                 android:layout_marginTop="32dp"
                 android:textColor="@color/black" />
 
+            <!-- First Name -->
             <EditText
-                android:id="@+id/editTextName"
+                android:id="@+id/editTextFirstName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="24dp"
                 android:background="@drawable/edit_text_bg"
-                android:hint="Name"
+                android:hint="First Name"
+                android:padding="12dp" />
+
+            <!-- Last Name -->
+            <EditText
+                android:id="@+id/editTextLastName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="24dp"
+                android:background="@drawable/edit_text_bg"
+                android:hint="Last Name"
                 android:padding="12dp" />
 
             <EditText
@@ -61,6 +72,16 @@
                 android:hint="Phone"
                 android:padding="12dp"
                 android:inputType="phone" />
+
+            <!-- Address -->
+            <EditText
+                android:id="@+id/editTextAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="24dp"
+                android:background="@drawable/edit_text_bg"
+                android:hint="Address"
+                android:padding="12dp" />
 
             <EditText
                 android:id="@+id/editTextPassword"

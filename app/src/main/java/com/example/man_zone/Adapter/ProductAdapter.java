@@ -49,18 +49,27 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         holder.tvPrice.setText(NumberFormat.getCurrencyInstance(new Locale("vi", "VN"))
                 .format(product.getPrice())
                 .replace("₫", " đ"));
-        Glide.with(context).load(product.getImg()).into(holder.picProduct);
+        if (product.getImageUrls() != null && !product.getImageUrls().isEmpty()) {
+            Glide.with(context).load(product.getImageUrls().get(0)).into(holder.picProduct);
+        } else {
+            holder.picProduct.setImageResource(R.drawable.black_bg); // ảnh mặc định nếu ko có ảnh
+        }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, DetailActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("productId", product.getProductId().toString());
+                bundle.putInt("productId", product.getId());
                 bundle.putString("title", product.getName());
                 bundle.putDouble("price", product.getPrice());
                 bundle.putString("description", product.getDescription());
-                bundle.putString("img", product.getImg());
+                String imgUrl = "";
+                if (product.getImageUrls() != null && !product.getImageUrls().isEmpty()) {
+                    imgUrl = product.getImageUrls().get(0);
+                }
+                bundle.putString("img", imgUrl);
+
                 intent.putExtras(bundle);
                 context.startActivity(intent);
             }

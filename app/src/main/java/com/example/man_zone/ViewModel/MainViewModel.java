@@ -7,7 +7,9 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.man_zone.Model.CategoryModel;
+import com.example.man_zone.Model.CategoryResponse;
 import com.example.man_zone.Model.ProductModel;
+import com.example.man_zone.Model.ProductResponse;
 import com.example.man_zone.Model.SliderModel;
 import com.example.man_zone.R;
 import com.example.man_zone.Repositories.ProductRepositories;
@@ -37,49 +39,85 @@ public class MainViewModel extends ViewModel {
 
     public void loadSlider() {
         List<SliderModel> sliderList = new ArrayList<>();
-        sliderList.add(new SliderModel(R.drawable.banner1, "Discount 10/10"));
+        sliderList.add(new SliderModel(R.drawable.banner1, "Discount Summer"));
         sliderList.add(new SliderModel(R.drawable.banner2, "Discount 10%"));
-        sliderList.add(new SliderModel(R.drawable.banner3, "Discount Christmas"));
+        sliderList.add(new SliderModel(R.drawable.banner3, "Discount ManAccessories"));
 
         slider.setValue(sliderList);
     }
 
     public void loadCategories() {
-        List<CategoryModel> categoryList = new ArrayList<>();
-        categoryList.add(new CategoryModel("Gold", 1, R.drawable.gold));
-        categoryList.add(new CategoryModel("Silver", 2, R.drawable.silver));
-        categoryList.add(new CategoryModel("Diamond", 3, R.drawable.diamond));
-        categoryList.add(new CategoryModel("Necklace", 4, R.drawable.necklace));
-        categoryList.add(new CategoryModel("Bracelet", 5, R.drawable.bracelet));
+        Call<CategoryResponse> call = ProductRepositories.getCategoryService().getCategories();
+        call.enqueue(new retrofit2.Callback<CategoryResponse>() {
+            @Override
+            public void onResponse(Call<CategoryResponse> call, Response<CategoryResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
 
-        categories.setValue(categoryList);
+                    // Lấy danh sách category từ data.content
+                    List<CategoryModel> fetchedCategories = response.body().getData().getContent();
+
+                    // Gán hình cho từng category
+                    for (CategoryModel category : fetchedCategories) {
+                        switch (category.getName().toLowerCase()) {
+                            case "watches":
+                                category.setImageResId(R.drawable.watches);
+                                break;
+                            case "ties":
+                                category.setImageResId(R.drawable.ties);
+                                break;
+                            case "belts":
+                                category.setImageResId(R.drawable.belts);
+                                break;
+                            case "sneakers":
+                                category.setImageResId(R.drawable.sneakers);
+                                break;
+                            case "hats":
+                                category.setImageResId(R.drawable.hats);
+                                break;
+                            default:
+                                // Nếu category chưa có hình định sẵn thì có thể để mặc định hoặc bỏ qua
+                                category.setImageResId(R.drawable.black_bg);
+                                break;
+                        }
+                    }
+
+                    // Cập nhật dữ liệu vào MutableLiveData
+                    categories.setValue(fetchedCategories);
+                    Log.d("CATEGORY_SUCCESS", "Categories loaded: " + fetchedCategories.size());
+                } else {
+                    Log.e("CATEGORY_ERROR", "Response unsuccessful or body null");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CategoryResponse> call, Throwable t) {
+                Log.e("CATEGORY_FAILURE", "API Call failed: " + t.getMessage());
+            }
+        });
     }
+
+
 
     public void loadProducts(boolean loadAll) {
         List<ProductModel> productList = new ArrayList<>();
         try {
-            Call<List<ProductModel>> call = ProductRepositories.getProductService().getProducts();
-            call.enqueue(new retrofit2.Callback<List<ProductModel>>() {
+            Call<ProductResponse> call = ProductRepositories.getProductService().getProducts();
+
+            call.enqueue(new retrofit2.Callback<ProductResponse>() {
                 @Override
-                public void onResponse(Call<List<ProductModel>> call, Response<List<ProductModel>> response) {
+                public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
                     Log.d("API_RESPONSE", "onResponse triggered");
-                    if (!response.isSuccessful()) {
-                        Log.e("API_ERROR", "Response not successful: " + response.code());
+
+                    if (!response.isSuccessful() || response.body() == null) {
+                        Log.e("API_ERROR", "Response not successful or body null");
                         return;
                     }
 
-                    if (response.body() == null) {
-                        Log.e("API_ERROR", "Response body is null");
-                        return;
-                    }
-
-                    List<ProductModel> responseProducts = response.body();
+                    List<ProductModel> responseProducts = response.body().getData().getContent();
 
                     if (loadAll) {
-                        // Thêm toàn bộ sản phẩm
                         productList.addAll(responseProducts);
                     } else {
-                        // Chỉ thêm 2 sản phẩm đầu tiên
                         int limit = Math.min(responseProducts.size(), 2);
                         for (int i = 0; i < limit; i++) {
                             productList.add(responseProducts.get(i));
@@ -91,14 +129,13 @@ public class MainViewModel extends ViewModel {
                 }
 
                 @Override
-                public void onFailure(Call<List<ProductModel>> call, Throwable throwable) {
+                public void onFailure(Call<ProductResponse> call, Throwable throwable) {
                     Log.e("API_FAILURE", "Call failed: " + throwable.getMessage());
-                    throwable.printStackTrace();
                 }
             });
+
         } catch (Exception ex) {
             Log.e("API_EXCEPTION", "Exception in loadProducts: " + ex.getMessage());
-            ex.printStackTrace();
         }
     }
 }

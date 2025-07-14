@@ -21,6 +21,7 @@ import com.example.man_zone.Model.CartItem;
 import com.example.man_zone.Model.OrderDetail;
 import com.example.man_zone.Model.OrderModel;
 import com.example.man_zone.ApiClient.CreateOrder;
+import com.example.man_zone.Model.ProductModel;
 import com.example.man_zone.R;
 import com.example.man_zone.ViewModel.SimpleResponse;
 import com.example.man_zone.helpers.CartManager;
@@ -69,7 +70,7 @@ public class ConfirmActivity extends BaseActivity {
 
             // ZaloPay SDK Init
 
-            ZaloPaySDK.init(553, Environment.SANDBOX);
+            ZaloPaySDK.init(2553, Environment.SANDBOX);
 
 
             cartManager = CartManager.getInstance(this);
@@ -137,7 +138,7 @@ public class ConfirmActivity extends BaseActivity {
 
         try {
             try{
-            String token = data.getString("zptranstoken");
+            String token = data.getString("zp_trans_token");
             ZaloPaySDK.getInstance().payOrder(ConfirmActivity.this, token, "demozpdk://app", new PayOrderListener() {
                 @Override
                 public void onPaymentSucceeded(String s, String s1, String s2) {
@@ -254,14 +255,15 @@ public class ConfirmActivity extends BaseActivity {
         orderRequest.setPaymentId(paymentId);
 
         List<OrderDetail> orderDetails = new ArrayList<>();
+
         for (CartItem item : cartManager.getCartItems()) {
             OrderDetail detail = new OrderDetail();
-            detail.setProductId(item.getProductId().toString());
+            detail.setProductId(String.valueOf(item.getProductId()));
             detail.setQuantity(item.getQuantity());
-            detail.setUnitPrice(1000);
-            detail.setManufactureCost(5000);
+            detail.setUnitPrice(item.getPrice());
             orderDetails.add(detail);
         }
+
 
         orderRequest.setOrderDetail(orderDetails);
 

@@ -21,6 +21,8 @@ import com.example.man_zone.helpers.CartManager;
 import com.example.man_zone.helpers.FavoriteManager;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -32,24 +34,11 @@ public class DetailActivity extends BaseActivity {
     private TextView tvDescription;
     private EditText etQuantity;
     private static final String PHONE_NUMBER = "1800 8386";
-
     private String title;
     private double price;
     private String description;
     private String img;
-    private UUID productId;
-    private String barcode;
-    private double manufactureCost;
-    private double weight;
-    private int counterId;
-    private int typeId;
-    private String certificateUrl;
-    private ProductModel.ProductStatuses productStatus;
-    private double markupRate;
-    private ProductModel.Units weightUnit;
-    private double stonePrice;
-
-
+    private int productId;
     private int quantity = 1;
     private Context context;
 
@@ -91,25 +80,11 @@ public class DetailActivity extends BaseActivity {
     private void getIntentData() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            // Existing data
             title = bundle.getString("title", "");
             price = bundle.getDouble("price", 0);
             description = bundle.getString("description", "");
             img = bundle.getString("img", "");
-
-            // New data from ProductModel
-            String productIdStr = bundle.getString("productId", "");
-            productId = productIdStr.isEmpty() ? null : UUID.fromString(productIdStr);
-            barcode = bundle.getString("barcode", "");
-            manufactureCost = bundle.getDouble("manufactureCost", 0);
-            weight = bundle.getDouble("weight", 0);
-            counterId = bundle.getInt("counterId", 0);
-            typeId = bundle.getInt("typeId", 0);
-            certificateUrl = bundle.getString("certificateUrl", "");
-            productStatus = (ProductModel.ProductStatuses) bundle.getSerializable("productStatus");
-            markupRate = bundle.getDouble("markupRate", 0);
-            weightUnit = (ProductModel.Units) bundle.getSerializable("weightUnit");
-            stonePrice = bundle.getDouble("stonePrice", 0);
+            productId = bundle.getInt("productId", 0);
         }
     }
 
@@ -143,7 +118,10 @@ public class DetailActivity extends BaseActivity {
         btnBack.setOnClickListener(v -> finish());
 
         btnFav.setOnClickListener(v -> {
-            ProductModel product = new ProductModel(title, price, description, img);
+            List<String> images = new ArrayList<>();
+            images.add(img); // Vì img là String, phải cho vào List
+
+            ProductModel product = new ProductModel(productId, title, description, price, images, null);
             FavoriteManager favoriteManager = FavoriteManager.getInstance(this);
 
             if (favoriteManager.isInFavorites(product)) {
@@ -191,29 +169,19 @@ public class DetailActivity extends BaseActivity {
         try {
             int qty = Integer.parseInt(quantityStr);
 
-            // Create a ProductModel with all fields
-            ProductModel product = new ProductModel(productId, title, price, description, img);
-            product.setProductId(productId);
-            product.setBarcode(barcode);
-            product.setManufactureCost(manufactureCost);
-            product.setWeight(weight);
-            product.setCounterId(counterId);
-            product.setTypeId(typeId);
-            product.setCertificateUrl(certificateUrl);
-            product.setProductStatus(productStatus);
-            product.setMarkupRate(markupRate);
-            product.setWeightUnit(weightUnit);
-            product.setStonePrice(stonePrice);
+            List<String> images = new ArrayList<>();
+            images.add(img); // Vì img là String, phải cho vào List
 
-            // Create CartItem using the ProductModel constructor
+            ProductModel product = new ProductModel(productId, title, description, price, images, null);
             CartItem cartItem = new CartItem(product, qty);
 
             CartManager.getInstance(context).addToCart(cartItem);
 
             double total = qty * price;
-            Toast.makeText(this, String.format("Added %d service(s) to cart. Total: %,.0f VND", qty, total), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, String.format("Đã thêm %d sản phẩm vào giỏ. Tổng: %,.0f VND", qty, total), Toast.LENGTH_LONG).show();
         } catch (NumberFormatException e) {
-            Toast.makeText(this, "Please enter a valid quantity", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Vui lòng nhập số lượng hợp lệ", Toast.LENGTH_SHORT).show();
         }
     }
+
 }

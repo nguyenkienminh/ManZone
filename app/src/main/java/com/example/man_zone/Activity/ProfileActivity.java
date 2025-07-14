@@ -14,7 +14,14 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.man_zone.ApiClient.ApiClient;
+import com.example.man_zone.Interfaces.CustomerService;
+import com.example.man_zone.Model.ProfileResponse;
 import com.example.man_zone.R;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ProfileActivity extends BaseActivity {
     private TextView tvUserName, tvUserPhone, tvUserEmail, tvUserPoint;
@@ -26,11 +33,14 @@ public class ProfileActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_profile);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // Init views
         tvUserName = findViewById(R.id.tvUserName);
         tvUserPhone = findViewById(R.id.tvUserPhone);
         tvUserEmail = findViewById(R.id.tvUserEmail);
@@ -38,43 +48,48 @@ public class ProfileActivity extends BaseActivity {
         btnLogout = findViewById(R.id.btnLogout);
         btnBack = findViewById(R.id.btnBack);
 
-        // Retrieve data from SharedPreferences
-
+        // Retrieve token from SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("user_data", MODE_PRIVATE);
-        String userName = sharedPreferences.getString("name", "N/A");
-        String userPhone = sharedPreferences.getString("phone", "N/A");
-        String userEmail = sharedPreferences.getString("email", "N/A");
-        int userPoints = sharedPreferences.getInt("accumulatedPoint", 0);
+        String token = sharedPreferences.getString("token", "");
 
-// Set data to views
-        tvUserName.setText(userName);
-        tvUserPhone.setText("Phone: " + userPhone);
-        tvUserEmail.setText("Email: " + userEmail);
-        tvUserPoint.setText("Points: " + userPoints);
+        // Call API to get profile
+        CustomerService userService = ApiClient.getClient().create(CustomerService.class);
+        Call<ProfileResponse> call = userService.getProfile("Bearer " + token);
 
-
-
-
-        btnBack.setOnClickListener(new View.OnClickListener() {
+        call.enqueue(new Callback<ProfileResponse>() {
             @Override
-            public void onClick(View v) {
-                finish();
+            public void onResponse(Call<ProfileResponse> call, Response<ProfileResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    ProfileResponse.UserData userData = response.body().getData();
+
+                    tvUserName.setText(userData.getFirstName() + " " + userData.getLastName());
+                    tvUserPhone.setText("Phone: " + userData.getPhoneNumber());
+                    tvUserEmail.setText("Email: " + userData.getEmail());
+                    tvUserPoint.setText("Address: " + userData.getAddress());
+                } else {
+                    Toast.makeText(ProfileActivity.this, "Failed to get profile", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProfileResponse> call, Throwable t) {
+                Toast.makeText(ProfileActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 
+        // Back button event
+        btnBack.setOnClickListener(v -> finish());
+
+        // Logout button event
         btnLogout.setOnClickListener(v -> {
-            // Clear saved data
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.clear();
             editor.apply();
 
-            // Show a toast message and navigate back to login
             Toast.makeText(ProfileActivity.this, "Logged out successfully", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();
         });
-
-
     }
 }

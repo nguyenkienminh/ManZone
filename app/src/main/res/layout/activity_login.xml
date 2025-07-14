@@ -21,7 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="332dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/logo" />
+                android:src="@drawable/manzonelogo" />
 
             <TextView
                 android:layout_width="match_parent"

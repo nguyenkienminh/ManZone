@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class RegisterResponse {
 
-    @SerializedName("isSuccess")
+    @SerializedName("success")
     private boolean isSuccess;
 
     @SerializedName("message")

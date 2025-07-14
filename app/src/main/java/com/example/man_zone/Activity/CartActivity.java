@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.man_zone.Adapter.CartAdapter;
+import com.example.man_zone.Model.CartItem;
 import com.example.man_zone.R;
 import com.example.man_zone.helpers.CartManager;
 
@@ -19,9 +20,10 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 public class CartActivity extends BaseActivity {
+
     private RecyclerView recyclerView;
     private CartAdapter cartAdapter;
-    private TextView subtotalTv, deliveryTv, taxTv, totalTv;
+    private TextView subtotalTv, deliveryTv, totalTv;
     private EditText couponEt;
     private Button btnCoupon, btnCheckout;
     private ImageView btnBack;
@@ -32,7 +34,6 @@ public class CartActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
 
-        // Initialize CartManager with context
         cartManager = CartManager.getInstance(this);
 
         initViews();
@@ -46,7 +47,6 @@ public class CartActivity extends BaseActivity {
         recyclerView = findViewById(R.id.cartView);
         subtotalTv = findViewById(R.id.subtotal);
         deliveryTv = findViewById(R.id.delivery);
-        taxTv = findViewById(R.id.tax);
         totalTv = findViewById(R.id.total);
         couponEt = findViewById(R.id.editTextText2);
         btnCoupon = findViewById(R.id.btnCoupon);
@@ -55,7 +55,6 @@ public class CartActivity extends BaseActivity {
     }
 
     private void loadSavedState() {
-        // Restore saved coupon if exists
         String savedCoupon = cartManager.getAppliedCoupon();
         if (!savedCoupon.isEmpty()) {
             couponEt.setText(savedCoupon);
@@ -67,28 +66,24 @@ public class CartActivity extends BaseActivity {
         cartAdapter = new CartAdapter(this, cartManager.getCartItems());
         recyclerView.setAdapter(cartAdapter);
 
-        // Update UI when item is removed
-        cartAdapter.setOnItemRemovedListener(() -> {
+        cartAdapter.setOnItemRemovedListener(item -> {
+            cartManager.removeFromCart(item);
+            cartAdapter.updateData(cartManager.getCartItems());
             updatePrices();
             checkEmptyState();
         });
 
-        // Add quantity change listener
         cartAdapter.setOnQuantityChangedListener((item, quantity) -> {
             cartManager.updateItemQuantity(item, quantity);
+            cartAdapter.updateData(cartManager.getCartItems());
             updatePrices();
         });
     }
 
     private void checkEmptyState() {
-        if (cartManager.getCartItems().isEmpty()) {
-            // You can add a TextView for empty state and show/hide it here
-            btnCheckout.setEnabled(false);
-            btnCoupon.setEnabled(false);
-        } else {
-            btnCheckout.setEnabled(true);
-            btnCoupon.setEnabled(true);
-        }
+        boolean isEmpty = cartManager.getCartItems().isEmpty();
+        btnCheckout.setEnabled(!isEmpty);
+        btnCoupon.setEnabled(!isEmpty);
     }
 
     private void setupListeners() {
@@ -117,10 +112,6 @@ public class CartActivity extends BaseActivity {
     }
 
     private void proceedToCheckout() {
-        if (cartManager.getCartItems().isEmpty()) {
-            Toast.makeText(this, "Your cart is empty!", Toast.LENGTH_SHORT).show();
-            return;
-        }
         Intent intent = new Intent(this, ConfirmActivity.class);
         startActivity(intent);
     }
@@ -133,20 +124,17 @@ public class CartActivity extends BaseActivity {
     private void updatePrices() {
         subtotalTv.setText(formatPrice(cartManager.getSubtotal()));
         deliveryTv.setText(formatPrice(cartManager.getDeliveryFee()));
-        taxTv.setText(formatPrice(cartManager.getTax()));
         totalTv.setText(formatPrice(cartManager.getTotal()));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        // Refresh cart data when activity resumes
-        cartAdapter.notifyDataSetChanged();
+        cartAdapter.updateData(cartManager.getCartItems());
         updatePrices();
         checkEmptyState();
     }
 
-    // Optional: Clear any resources when activity is destroyed
     @Override
     protected void onDestroy() {
         super.onDestroy();

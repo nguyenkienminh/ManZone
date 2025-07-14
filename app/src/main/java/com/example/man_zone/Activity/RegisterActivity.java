@@ -60,13 +60,16 @@ public class RegisterActivity extends BaseActivity {
         binding.btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = binding.editTextName.getText().toString().trim();
+                String firstName = binding.editTextFirstName.getText().toString().trim();
+                String lastName = binding.editTextLastName.getText().toString().trim();
                 String email = binding.editTextEmail.getText().toString().trim();
                 String phone = binding.editTextPhone.getText().toString().trim();
                 String password = binding.editTextPassword.getText().toString().trim();
+                String address = binding.editTextAddress.getText().toString().trim();
 
                 // Validate non-empty fields
-                if (name.isEmpty() || email.isEmpty() || phone.isEmpty() || password.isEmpty()) {
+                if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() ||
+                        phone.isEmpty() || password.isEmpty() || address.isEmpty()) {
                     Toast.makeText(RegisterActivity.this, "All fields are required.", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -84,7 +87,14 @@ public class RegisterActivity extends BaseActivity {
                 }
 
                 // Create a CustomerModel with input values
-                CustomerModel customer = new CustomerModel(name, phone, email, "", password, 0);
+                CustomerModel customer = new CustomerModel(
+                        firstName,
+                        lastName,
+                        password,
+                        phone,
+                        email,
+                        address
+                );
 
                 // Create a CustomerService instance and make the request
                 CustomerService customerService = ApiClient.getClient().create(CustomerService.class);

@@ -3,18 +3,16 @@ package com.example.man_zone.Model;
 public class LoginResponse {
     private boolean success;
     private String message;
-    private UserModel data; // Change Object to User
+    private TokenData data;
 
-    // Getters and setters
-    public boolean isSuccess() {
-        return success;
-    }
+    public boolean isSuccess() { return success; }
+    public String getMessage() { return message; }
+    public TokenData getData() { return data; }
 
-    public String getMessage() {
-        return message;
-    }
+    // Inner class (TokenData) để viết chung file
+    public static class TokenData {
+        private String token;
 
-    public UserModel getData() {
-        return data;
+        public String getToken() { return token; }
     }
 }

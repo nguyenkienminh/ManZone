@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.man_zone.Model.CartItem;
 import com.example.man_zone.R;
-import com.example.man_zone.helpers.CartManager;
 
 import java.text.NumberFormat;
 import java.util.List;
@@ -26,15 +25,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     private List<CartItem> cartItems;
     private OnItemRemovedListener onItemRemovedListener;
     private OnQuantityChangedListener onQuantityChangedListener;
-    private final CartManager cartManager;
 
-    // Maximum quantity allowed per item
     private static final int MAX_QUANTITY = 99;
 
     public CartAdapter(Context context, List<CartItem> cartItems) {
         this.context = context;
         this.cartItems = cartItems;
-        this.cartManager = CartManager.getInstance(context);
     }
 
     public void setOnItemRemovedListener(OnItemRemovedListener listener) {
@@ -56,13 +52,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         CartItem item = cartItems.get(position);
 
-        // Set item details
         holder.tvName.setText(item.getName());
         holder.price.setText(formatPrice(item.getPrice()));
         holder.priceforMany.setText(formatPrice(item.getTotalPrice()));
         holder.quantity.setText(String.valueOf(item.getQuantity()));
 
-        // Load image using Glide with error handling
         if (item.getImg() != null && !item.getImg().isEmpty()) {
             Glide.with(context)
                     .load(item.getImg())
@@ -70,60 +64,36 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                     .into(holder.imageView);
         }
 
-        // Handle quantity increase
         holder.btnPlus.setOnClickListener(v -> {
             if (item.getQuantity() < MAX_QUANTITY) {
                 int newQuantity = item.getQuantity() + 1;
-                updateItemQuantity(item, newQuantity, position);
+                if (onQuantityChangedListener != null) {
+                    onQuantityChangedListener.onQuantityChanged(item, newQuantity);
+                }
             } else {
                 Toast.makeText(context, "Maximum quantity reached", Toast.LENGTH_SHORT).show();
             }
         });
 
-        // Handle quantity decrease or removal
         holder.btnMinus.setOnClickListener(v -> {
             if (item.getQuantity() > 1) {
                 int newQuantity = item.getQuantity() - 1;
-                updateItemQuantity(item, newQuantity, position);
+                if (onQuantityChangedListener != null) {
+                    onQuantityChangedListener.onQuantityChanged(item, newQuantity);
+                }
             } else {
-                showRemoveConfirmation(item, position);
+                if (onItemRemovedListener != null) {
+                    onItemRemovedListener.onItemRemoved(item);
+                }
             }
         });
 
-        // Add long click listener for direct removal
         holder.itemView.setOnLongClickListener(v -> {
-            showRemoveConfirmation(item, position);
+            if (onItemRemovedListener != null) {
+                onItemRemovedListener.onItemRemoved(item);
+            }
             return true;
         });
-    }
-
-    private void updateItemQuantity(CartItem item, int newQuantity, int position) {
-        if (newQuantity > 0 && newQuantity <= MAX_QUANTITY) {
-            item.setQuantity(newQuantity);
-            cartManager.updateItemQuantity(item, newQuantity);
-            notifyItemChanged(position);
-
-            if (onQuantityChangedListener != null) {
-                onQuantityChangedListener.onQuantityChanged(item, newQuantity);
-            }
-        }
-    }
-
-    private void showRemoveConfirmation(CartItem item, int position) {
-        // You can implement a custom dialog here
-        // For now, directly removing the item
-        removeItem(item, position);
-    }
-
-    private void removeItem(CartItem item, int position) {
-        cartManager.removeFromCart(item);
-        cartItems.remove(position);
-        notifyItemRemoved(position);
-        notifyItemRangeChanged(position, cartItems.size());
-
-        if (onItemRemovedListener != null) {
-            onItemRemovedListener.onItemRemoved();
-        }
     }
 
     private String formatPrice(double price) {
@@ -144,7 +114,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     }
 
     public interface OnItemRemovedListener {
-        void onItemRemoved();
+        void onItemRemoved(CartItem item);
     }
 
     public interface OnQuantityChangedListener {

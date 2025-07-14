@@ -65,8 +65,13 @@ public class WishlistAdapter extends RecyclerView.Adapter<WishlistAdapter.Wishli
         holder.tvProductPrice.setText(formattedPrice);
 
         // Load ảnh sản phẩm
+        String imgUrl = "";
+        if (product.getImageUrls() != null && !product.getImageUrls().isEmpty()) {
+            imgUrl = product.getImageUrls().get(0);
+        }
+
         Glide.with(holder.itemView.getContext())
-                .load(product.getImg())
+                .load(imgUrl)
                 .into(holder.imgProduct);
 
         // Xử lý sự kiện click vào item

@@ -111,10 +111,15 @@ public class WishlistActivity extends AppCompatActivity {
         wishlistAdapter.setOnItemClickListener(product -> {
             Intent intent = new Intent(WishlistActivity.this, DetailActivity.class);
             // Thay đổi tên key cho phù hợp với DetailActivity
+            intent.putExtra("productId", product.getId());
             intent.putExtra("title", product.getName());  // Thay vì "product_name"
             intent.putExtra("price", product.getPrice()); // Thay vì "product_price"
             intent.putExtra("description", product.getDescription()); // Thay vì "product_description"
-            intent.putExtra("img", product.getImg());     // Thay vì "product_image"
+            String imgUrl = "";
+            if (product.getImageUrls() != null && !product.getImageUrls().isEmpty()) {
+                imgUrl = product.getImageUrls().get(0);
+            }
+            intent.putExtra("img", imgUrl);     // Thay vì "product_image"
             startActivity(intent);
         });
         recyclerViewWishlist.setAdapter(wishlistAdapter);

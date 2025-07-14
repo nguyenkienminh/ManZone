@@ -1,18 +1,27 @@
 package com.example.man_zone.Model;
 
-public class CategoryModel {
+import java.io.Serializable;
 
-    private String name;
+public class CategoryModel implements Serializable {
     private int id;
+    private String name;
+    private String description;
     private int imageResId;
 
-    public CategoryModel() {
+
+    public CategoryModel(int id, String name, String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
     }
 
-    public CategoryModel(String name, int id, int imageResId) {
-        this.name = name;
+    // Getters & Setters
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
         this.id = id;
-        this.imageResId = imageResId;
     }
 
     public String getName() {
@@ -23,19 +32,14 @@ public class CategoryModel {
         this.name = name;
     }
 
-    public int getId() {
-        return id;
+    public String getDescription() {
+        return description;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public int getImageResId() {
-        return imageResId;
-    }
-
-    public void setImageResId(int imageResId) {
-        this.imageResId = imageResId;
-    }
+    public int getImageResId() { return imageResId; }
+    public void setImageResId(int imageResId) { this.imageResId = imageResId; }
 }

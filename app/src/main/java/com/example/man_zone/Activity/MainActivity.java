@@ -64,10 +64,10 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        SharedPreferences sharedPreferences = getSharedPreferences("user_data", MODE_PRIVATE);
-        TextView mainName = findViewById(R.id.tvNameMain);
-        String userName = sharedPreferences.getString("name", "N/A");
-        mainName.setText(userName);
+            SharedPreferences sharedPreferences = getSharedPreferences("user_data", MODE_PRIVATE);
+            TextView mainName = findViewById(R.id.tvNameMain);
+            String userName = sharedPreferences.getString("email", "N/A");
+            mainName.setText(userName);
 
         binding.btnCart.setOnClickListener(new View.OnClickListener() {
             @Override

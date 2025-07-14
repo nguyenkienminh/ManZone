@@ -36,50 +36,23 @@ public class ConfirmAdapter extends RecyclerView.Adapter<ConfirmAdapter.ViewHold
         CartItem item = cartItems.get(position);
 
         // Hiển thị thông tin cơ bản
-        holder.titleTxt.setText(item.getName());  // Sử dụng name thay vì title
+        holder.titleTxt.setText(item.getName());
         holder.quantityTxt.setText("x" + item.getQuantity());
         holder.priceTxt.setText(formatPrice(item.getPrice() * item.getQuantity()));
 
-        // Hiển thị thông tin chi tiết sản phẩm
+        // Product ID (int nên không cần check null)
         if (holder.productIdTxt != null) {
-            holder.productIdTxt.setText("ID: " + (item.getProductId() != null ? item.getProductId().toString() : "N/A"));
+            holder.productIdTxt.setText("ID: " + item.getProductId());
         }
 
-        if (holder.weightTxt != null) {
-            String weightText = String.format("%.2f %s", item.getWeight(),
-                    item.getWeightUnit() != null ? item.getWeightUnit().toString() : "");
-            holder.weightTxt.setText(weightText);
-        }
-
-        if (holder.descriptionTxt != null) {
-            holder.descriptionTxt.setText(item.getDescription());
-        }
-
-        // Hiển thị ảnh sản phẩm nếu có
+        // Ảnh sản phẩm
         if (holder.productImg != null && item.getImg() != null) {
             Glide.with(holder.itemView.getContext())
                     .load(item.getImg())
                     .into(holder.productImg);
         }
-
-        // Hiển thị trạng thái sản phẩm
-        if (holder.statusTxt != null && item.getProductStatus() != null) {
-            holder.statusTxt.setText(item.getProductStatus().toString());
-        }
-
-        // Hiển thị thông tin về giá
-        if (holder.manufactureCostTxt != null) {
-            holder.manufactureCostTxt.setText(formatPrice(item.getManufactureCost()));
-        }
-
-        if (holder.stonePriceTxt != null) {
-            holder.stonePriceTxt.setText(formatPrice(item.getStonePrice()));
-        }
-
-        if (holder.markupRateTxt != null) {
-            holder.markupRateTxt.setText(String.format("%.1f%%", item.getMarkupRate()));
-        }
     }
+
 
     @Override
     public int getItemCount() {
