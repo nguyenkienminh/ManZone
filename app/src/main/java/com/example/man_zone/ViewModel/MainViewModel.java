@@ -118,7 +118,7 @@ public class MainViewModel extends ViewModel {
                     if (loadAll) {
                         productList.addAll(responseProducts);
                     } else {
-                        int limit = Math.min(responseProducts.size(), 2);
+                        int limit = Math.min(responseProducts.size(), 4);
                         for (int i = 0; i < limit; i++) {
                             productList.add(responseProducts.get(i));
                         }

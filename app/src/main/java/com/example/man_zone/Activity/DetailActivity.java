@@ -33,7 +33,7 @@ public class DetailActivity extends BaseActivity {
     private TextView tvPrice;
     private TextView tvDescription;
     private EditText etQuantity;
-    private static final String PHONE_NUMBER = "1800 8386";
+    private static final String PHONE_NUMBER = "0865774704";
     private String title;
     private double price;
     private String description;

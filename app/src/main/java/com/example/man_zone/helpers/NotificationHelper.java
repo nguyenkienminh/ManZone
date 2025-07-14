@@ -43,7 +43,7 @@ public class NotificationHelper {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_cart_notification) // You'll need to create this icon
-                .setContentTitle("Jewelry Store")
+                .setContentTitle("ManZone Store")
                 .setContentText("You have " + itemCount + " items in your cart")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true)

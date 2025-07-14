@@ -56,6 +56,6 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
         gMap.getUiSettings().setZoomControlsEnabled(true);
         LatLng location = new LatLng(10.841304, 106.810088);
         this.gMap.addMarker(new MarkerOptions().position(location).title("FPT University"));
-        this.gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location,12));
+        this.gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 17));
     }
 }
