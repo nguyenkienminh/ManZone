@@ -66,4 +66,7 @@ dependencies {
 
     //paypal
     implementation ("com.paypal.sdk:paypal-android-sdk:2.16.0")
+    
+    // SwipeRefreshLayout
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 }

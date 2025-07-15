@@ -4,4 +4,14 @@
     <color name="white">#FFFFFFFF</color>
     <color name="grey">#808080</color>
     <color name="lightgrey">#D3D3D3</color>
+    <color name="status_pending">#FFC107</color>
+    <color name="status_processing">#2196F3</color>
+    <color name="status_shipped">#9C27B0</color>
+    <color name="status_delivered">#4CAF50</color>
+    <color name="status_cancelled">#F44336</color>
+    <color name="status_default">#607D8B</color>
+    <color name="background_light">#FAFAFA</color>
+    <color name="border_light">#EEEEEE</color>
+    <color name="note_background">#F5F5F5</color>
+    <color name="image_placeholder">#F0F0F0</color>
 </resources>

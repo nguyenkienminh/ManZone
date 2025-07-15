@@ -4,4 +4,19 @@
     <string name="subtitle">Master Your Style – Wear Confidence, Wear Man_Zone."</string>
     <string name="intro_signin">Already have an account? <b>Sign In</b></string>
     <string name="intro_signup">Don\'t have account? <b>Sign Up</b></string>
+    <string name="no_orders_found">No Orders Found</string>
+    <string name="no_orders_message">You haven\'t placed any orders yet</string>
+    <string name="my_orders">My Orders</string>
+    <string name="order_details">Order Details</string>
+    <string name="customer_name">Customer Name</string>
+    <string name="shipping_address">Shipping Address</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="order_items">Order Items</string>
+    <string name="total_amount">Total Amount</string>
+    <string name="order_note">Note</string>
+    <string name="quantity_format">Qty: %d</string>
+    <string name="currency_format">%s VND</string>
+    <string name="auth_required">Authentication required. Please login again.</string>
+    <string name="network_error">Network error: %s</string>
+    <string name="loading_orders">Loading orders...</string>
 </resources>
