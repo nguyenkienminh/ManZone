@@ -64,10 +64,10 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-            SharedPreferences sharedPreferences = getSharedPreferences("user_data", MODE_PRIVATE);
-            TextView mainName = findViewById(R.id.tvNameMain);
-            String userName = sharedPreferences.getString("email", "N/A");
-            mainName.setText(userName);
+        SharedPreferences sharedPreferences = getSharedPreferences("user_data", MODE_PRIVATE);
+        TextView mainName = findViewById(R.id.tvNameMain);
+        String userName = sharedPreferences.getString("email", "N/A");
+        mainName.setText(userName);
 
         binding.btnCart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,6 +107,11 @@ public class MainActivity extends BaseActivity {
                 Intent intent = new Intent(MainActivity.this, ProductActivity.class);
                 startActivity(intent);
             }
+        });
+
+        binding.chatButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+            startActivity(intent);
         });
     }
 

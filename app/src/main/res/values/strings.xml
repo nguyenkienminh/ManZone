@@ -19,4 +19,5 @@
     <string name="auth_required">Authentication required. Please login again.</string>
     <string name="network_error">Network error: %s</string>
     <string name="loading_orders">Loading orders...</string>
+    <string name="chat_with_participant">with %s</string>
 </resources>

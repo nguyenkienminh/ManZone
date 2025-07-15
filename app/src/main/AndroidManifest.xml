@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
 
     <application
@@ -48,6 +50,12 @@
             android:exported="false" />
         <activity
             android:name=".Activity.ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.ChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.ChatRoomActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.OrderActivity"
