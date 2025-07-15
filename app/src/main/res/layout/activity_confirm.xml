@@ -148,6 +148,63 @@
                     app:layout_constraintTop_toTopOf="@id/textTotal" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Shipping Information"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp" />
+
+            <EditText
+                android:id="@+id/editCustomerName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="8dp"
+                android:hint="Customer Name"
+                android:background="@drawable/edit_text_bg"
+                android:padding="12dp"/>
+
+            <EditText
+                android:id="@+id/editPhoneNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="8dp"
+                android:hint="Phone Number"
+                android:inputType="phone"
+                android:background="@drawable/edit_text_bg"
+                android:padding="12dp"/>
+
+            <EditText
+                android:id="@+id/editAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="8dp"
+                android:hint="Shipping Address"
+                android:background="@drawable/edit_text_bg"
+                android:padding="12dp"/>
+
+            <EditText
+                android:id="@+id/editNote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="8dp"
+                android:hint="Note"
+                android:background="@drawable/edit_text_bg"
+                android:padding="12dp"/>
+
+
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnPayPaypal"
                 android:layout_width="match_parent"
