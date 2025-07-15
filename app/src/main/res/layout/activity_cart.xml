@@ -49,134 +49,161 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/cartView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_margin="16dp" />
 
+            <!-- Coupon -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="32dp"
-                android:layout_marginEnd="16dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="24dp"
+                android:orientation="horizontal"
                 android:background="@drawable/grey_bg_full_corner"
-                android:orientation="horizontal">
+                android:padding="8dp">
 
                 <EditText
                     android:id="@+id/editTextText2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
                     android:layout_weight="1"
-                    android:ems="10"
-                    android:hint="Enter your coupon"
-                    android:inputType="text"
-                    android:paddingStart="8dp"
-                    android:textSize="14sp" />
+                    android:hint="Coupon code"
+                    android:background="@android:color/transparent"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:paddingStart="12dp"
+                    android:inputType="text" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnCoupon"
-                    style="@android:style/Widget.Button"
                     android:layout_width="100dp"
-                    android:layout_height="38dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="8dp"
                     android:background="@drawable/black_bg"
                     android:text="Apply"
                     android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textSize="16sp"
+                    app:cornerRadius="8dp" />
             </LinearLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp">
+                android:layout_margin="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="3dp"
+                android:backgroundTint="@color/white"
+                android:padding="16dp">
 
-                <TextView
-                    android:id="@+id/textView11"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Subtotal"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/textView14"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Delivery"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView11" />
-
-
-                <View
-                    android:id="@+id/view"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@color/grey"
-                    app:layout_constraintTop_toBottomOf="@+id/textView14"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
-
-                <TextView
-                    android:id="@+id/textView16"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Total"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/total"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0 VND"
-                    android:textStyle="bold"
-                    android:textColor="@color/grey"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/textView16" />
+                    <!-- Subtotal -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="8dp">
 
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Subtotal"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/delivery"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0 VND"
-                    android:textStyle="bold"
-                    android:textColor="@color/grey"
-                    app:layout_constraintBottom_toBottomOf="@+id/textView14"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/textView14" />
+                        <TextView
+                            android:id="@+id/subtotal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0 VND"
+                            android:textColor="@color/grey"
+                            android:textStyle="bold"
+                            android:textSize="16sp" />
+                    </LinearLayout>
 
-                <TextView
-                    android:id="@+id/subtotal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0 VND"
-                    android:textStyle="bold"
-                    android:textColor="@color/grey"
-                    app:layout_constraintBottom_toBottomOf="@+id/textView11"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/textView11" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    <!-- Delivery -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="8dp">
 
-            <androidx.appcompat.widget.AppCompatButton
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Delivery"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/delivery"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0 VND"
+                            android:textColor="@color/grey"
+                            android:textStyle="bold"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/grey"
+                        android:layout_marginVertical="8dp" />
+
+                    <!-- Total -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="8dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Total"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/total"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0 VND"
+                            android:textColor="@android:color/holo_red_dark"
+                            android:textStyle="bold"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Checkout Button -->
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCheckout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/black_bg"
-                style="@android:style/Widget.Button"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:textSize="18sp"
                 android:layout_margin="16dp"
-                android:text="Check out" />
+                android:text="CHECK OUT"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/black"
+                app:cornerRadius="12dp"
+                android:paddingVertical="12dp" />
+
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
