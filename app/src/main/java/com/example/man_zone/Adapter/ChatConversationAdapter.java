@@ -39,7 +39,7 @@ public class ChatConversationAdapter extends RecyclerView.Adapter<ChatConversati
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ChatConversationModel conversation = conversations.get(position);
-        holder.bind(conversation);
+//        holder.bind(conversation);
     }
 
     @Override
@@ -74,26 +74,26 @@ public class ChatConversationAdapter extends RecyclerView.Adapter<ChatConversati
                     Intent intent = new Intent(context, ChatRoomActivity.class);
                     intent.putExtra("conversation_id", conversation.getId());
                     intent.putExtra("conversation_title", conversation.getTitle());
-                    intent.putExtra("participant_type", conversation.getParticipantType());
+//                    intent.putExtra("participant_type", conversation.getParticipantType());
                     context.startActivity(intent);
                 }
             });
         }
 
-        public void bind(ChatConversationModel conversation) {
-            titleTextView.setText(conversation.getTitle());
-            lastMessageTextView.setText(conversation.getLastMessage() != null ?
-                conversation.getLastMessage() : "No messages yet");
-
-            if (conversation.getLastMessageTime() != null) {
-                SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, HH:mm", Locale.getDefault());
-                timeTextView.setText(sdf.format(conversation.getLastMessageTime()));
-            } else {
-                timeTextView.setText("");
-            }
-
-            participantTypeTextView.setText(conversation.getParticipantType().toUpperCase());
-            unreadIndicator.setVisibility(conversation.isRead() ? View.GONE : View.VISIBLE);
-        }
+//        public void bind(ChatConversationModel conversation) {
+//            titleTextView.setText(conversation.getTitle());
+//            lastMessageTextView.setText(conversation.getLastMessage() != null ?
+//                conversation.getLastMessage() : "No messages yet");
+//
+//            if (conversation.getLastMessageTime() != null) {
+//                SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, HH:mm", Locale.getDefault());
+//                timeTextView.setText(sdf.format(conversation.getLastMessageTime()));
+//            } else {
+//                timeTextView.setText("");
+//            }
+//
+//            participantTypeTextView.setText(conversation.getParticipantType().toUpperCase());
+//            unreadIndicator.setVisibility(conversation.isRead() ? View.GONE : View.VISIBLE);
+//        }
     }
 }

@@ -57,23 +57,23 @@ public class ChatActivity extends BaseActivity {
         conversations.clear();
 
         // Add some sample conversations for demonstration
-        conversations.add(new ChatConversationModel(
-            "1",
-            "Technical Support",
-            "Thank you for contacting us. How can we help?",
-            new Date(System.currentTimeMillis() - 3600000), // 1 hour ago
-            "staff",
-            false
-        ));
-
-        conversations.add(new ChatConversationModel(
-            "2",
-            "Order Inquiry",
-            "Your order has been processed successfully.",
-            new Date(System.currentTimeMillis() - 7200000), // 2 hours ago
-            "admin",
-            true
-        ));
+//        conversations.add(new ChatConversationModel(
+//            "1",
+//            "Technical Support",
+//            "Thank you for contacting us. How can we help?",
+//            new Date(System.currentTimeMillis() - 3600000), // 1 hour ago
+//            "staff",
+//            false
+//        ));
+//
+//        conversations.add(new ChatConversationModel(
+//            "2",
+//            "Order Inquiry",
+//            "Your order has been processed successfully.",
+//            new Date(System.currentTimeMillis() - 7200000), // 2 hours ago
+//            "admin",
+//            true
+//        ));
 
         conversationAdapter.updateConversations(conversations);
         updateEmptyState();
@@ -115,16 +115,16 @@ public class ChatActivity extends BaseActivity {
 
         // Create new conversation
         String conversationId = UUID.randomUUID().toString();
-        ChatConversationModel newConversation = new ChatConversationModel(
-            conversationId,
-            title,
-            "Conversation started",
-            new Date(),
-            "staff", // Default to staff, user can choose in the chat room
-            false
-        );
+//        ChatConversationModel newConversation = new ChatConversationModel(
+//            conversationId,
+//            title,
+//            "Conversation started",
+//            new Date(),
+//            "staff", // Default to staff, user can choose in the chat room
+//            false
+//        );
 
-        conversations.add(0, newConversation); // Add to top of list
+//        conversations.add(0, newConversation); // Add to top of list
         conversationAdapter.updateConversations(conversations);
         updateEmptyState();
 
