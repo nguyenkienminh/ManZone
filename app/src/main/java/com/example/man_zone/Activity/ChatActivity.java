@@ -2,28 +2,25 @@ package com.example.man_zone.Activity;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.man_zone.Adapter.ChatConversationAdapter;
-import com.example.man_zone.Model.ChatConversationModel;
 import com.example.man_zone.R;
+import com.example.man_zone.ViewModel.ChatViewModel;
 import com.example.man_zone.databinding.ActivityChatBinding;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
 
 public class ChatActivity extends BaseActivity {
     private ActivityChatBinding binding;
     private ChatConversationAdapter conversationAdapter;
-    private List<ChatConversationModel> conversations;
+    private ChatViewModel chatViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,108 +28,140 @@ public class ChatActivity extends BaseActivity {
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        initViewModel();
         initViews();
-        initConversations();
         setupRecyclerView();
-        loadConversations();
+        observeViewModel();
+
+        // Load conversations
+        chatViewModel.loadUserConversations();
+
+        // Connect WebSocket - subscriptions will be handled automatically when
+        // connected
+        chatViewModel.connectWebSocket();
+    }
+
+    private void initViewModel() {
+        chatViewModel = new ViewModelProvider(this).get(ChatViewModel.class);
     }
 
     private void initViews() {
         binding.btnBack.setOnClickListener(v -> finish());
         binding.btnNewConversation.setOnClickListener(v -> showNewConversationDialog());
-    }
 
-    private void initConversations() {
-        conversations = new ArrayList<>();
-        conversationAdapter = new ChatConversationAdapter(this);
+        // Set up pull to refresh if available
+        if (binding.swipeRefreshLayout != null) {
+            binding.swipeRefreshLayout.setOnRefreshListener(() -> {
+                chatViewModel.loadUserConversations();
+            });
+        }
     }
 
     private void setupRecyclerView() {
-        binding.rvConversations.setLayoutManager(new LinearLayoutManager(this));
-        binding.rvConversations.setAdapter(conversationAdapter);
+        conversationAdapter = new ChatConversationAdapter(this);
+        binding.recyclerViewConversations.setLayoutManager(new LinearLayoutManager(this));
+        binding.recyclerViewConversations.setAdapter(conversationAdapter);
+
+        conversationAdapter.setOnConversationClickListener(conversation -> {
+            Log.d("CHAT_ACTIVITY", "Conversation clicked: ID=" + conversation.getId() + ", Title="
+                    + conversation.getTitle() + ", Done=" + conversation.isDone());
+            Intent intent = new Intent(ChatActivity.this, ChatRoomActivity.class);
+            intent.putExtra("conversation_id", conversation.getId());
+            intent.putExtra("conversation_title", conversation.getTitle());
+            intent.putExtra("conversation_done", conversation.isDone());
+            startActivity(intent);
+        });
     }
 
-    private void loadConversations() {
-        // For now, we'll use mock data. In a real app, this would load from a database or API
-        conversations.clear();
+    private void observeViewModel() {
+        chatViewModel.getConversations().observe(this, conversations -> {
+            if (conversations != null) {
+                conversationAdapter.updateConversations(conversations);
+                if (binding.swipeRefreshLayout != null) {
+                    binding.swipeRefreshLayout.setRefreshing(false);
+                }
 
-        // Add some sample conversations for demonstration
-//        conversations.add(new ChatConversationModel(
-//            "1",
-//            "Technical Support",
-//            "Thank you for contacting us. How can we help?",
-//            new Date(System.currentTimeMillis() - 3600000), // 1 hour ago
-//            "staff",
-//            false
-//        ));
-//
-//        conversations.add(new ChatConversationModel(
-//            "2",
-//            "Order Inquiry",
-//            "Your order has been processed successfully.",
-//            new Date(System.currentTimeMillis() - 7200000), // 2 hours ago
-//            "admin",
-//            true
-//        ));
+                if (conversations.isEmpty()) {
+                    if (binding.textViewEmptyState != null) {
+                        binding.textViewEmptyState.setVisibility(View.VISIBLE);
+                    }
+                    binding.recyclerViewConversations.setVisibility(View.GONE);
+                } else {
+                    if (binding.textViewEmptyState != null) {
+                        binding.textViewEmptyState.setVisibility(View.GONE);
+                    }
+                    binding.recyclerViewConversations.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
-        conversationAdapter.updateConversations(conversations);
-        updateEmptyState();
-    }
+        chatViewModel.getError().observe(this, error -> {
+            if (error != null) {
+                Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+                if (binding.swipeRefreshLayout != null) {
+                    binding.swipeRefreshLayout.setRefreshing(false);
+                }
+            }
+        });
 
-    private void updateEmptyState() {
-        if (conversations.isEmpty()) {
-            binding.emptyStateLayout.setVisibility(View.VISIBLE);
-            binding.rvConversations.setVisibility(View.GONE);
-        } else {
-            binding.emptyStateLayout.setVisibility(View.GONE);
-            binding.rvConversations.setVisibility(View.VISIBLE);
-        }
+        chatViewModel.getLoading().observe(this, loading -> {
+            if (loading != null && binding.progressBar != null) {
+                binding.progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
+            }
+        });
+
+        chatViewModel.getNewConversation().observe(this, conversation -> {
+            if (conversation != null) {
+                // Refresh conversations when a new one is created
+                chatViewModel.loadUserConversations();
+            }
+        });
+
+        chatViewModel.getConversationUpdated().observe(this, conversation -> {
+            if (conversation != null) {
+                Log.d("CHAT_ACTIVITY", "Conversation updated: " + conversation.getId() +
+                        ", done: " + conversation.isDone());
+                // Update the specific conversation in the adapter
+                conversationAdapter.updateConversation(conversation);
+            }
+        });
+
+        chatViewModel.getConnectionStatus().observe(this, connected -> {
+            // You can show connection status in UI if needed
+            if (connected != null && connected) {
+                // Connected to WebSocket
+            } else {
+                // Disconnected from WebSocket
+            }
+        });
     }
 
     private void showNewConversationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("New Conversation");
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_new_conversation, null);
+        builder.setView(dialogView);
 
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog_new_conversation, null);
         EditText etTitle = dialogView.findViewById(R.id.etConversationTitle);
 
-        builder.setView(dialogView);
-        builder.setPositiveButton("Create", (dialog, which) -> {
-            String title = etTitle.getText().toString().trim();
-            if (!title.isEmpty()) {
-                createNewConversation(title);
-            }
-        });
-        builder.setNegativeButton("Cancel", null);
+        builder.setTitle("New Conversation")
+                .setPositiveButton("Create", (dialog, which) -> {
+                    String title = etTitle.getText().toString().trim();
+                    if (title.isEmpty()) {
+                        title = "New Support Request";
+                    }
+                    chatViewModel.createConversation(title);
+                })
+                .setNegativeButton("Cancel", null);
 
-        builder.show();
+        builder.create().show();
     }
 
-    private void createNewConversation(String title) {
-        // Get current user email from SharedPreferences
-        SharedPreferences sharedPreferences = getSharedPreferences("user_data", MODE_PRIVATE);
-        String userEmail = sharedPreferences.getString("email", "user");
-
-        // Create new conversation
-        String conversationId = UUID.randomUUID().toString();
-//        ChatConversationModel newConversation = new ChatConversationModel(
-//            conversationId,
-//            title,
-//            "Conversation started",
-//            new Date(),
-//            "staff", // Default to staff, user can choose in the chat room
-//            false
-//        );
-
-//        conversations.add(0, newConversation); // Add to top of list
-        conversationAdapter.updateConversations(conversations);
-        updateEmptyState();
-
-        // Navigate to chat room
-        Intent intent = new Intent(this, ChatRoomActivity.class);
-        intent.putExtra("conversation_id", conversationId);
-        intent.putExtra("conversation_title", title);
-        intent.putExtra("participant_type", "staff");
-        startActivity(intent);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (chatViewModel != null) {
+            chatViewModel.disconnectWebSocket();
+        }
     }
 }

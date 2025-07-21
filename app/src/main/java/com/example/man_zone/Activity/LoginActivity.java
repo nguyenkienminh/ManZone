@@ -23,6 +23,7 @@ import com.example.man_zone.Interfaces.AuthorizeService;
 import com.example.man_zone.Model.LoginRequest;
 import com.example.man_zone.Model.LoginResponse;
 import com.example.man_zone.Model.UserModel;
+import com.example.man_zone.Utils.PrefsHelper;
 import com.example.man_zone.databinding.ActivityLoginBinding; // Thêm dòng này
 
 import org.json.JSONObject;
@@ -79,7 +80,8 @@ public class LoginActivity extends BaseActivity {
                 }
 
                 if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    Toast.makeText(LoginActivity.this, "Please enter a valid email address.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Please enter a valid email address.", Toast.LENGTH_SHORT)
+                            .show();
                     return;
                 }
 
@@ -89,36 +91,50 @@ public class LoginActivity extends BaseActivity {
                 // Call the login API
                 LoginRequest request = new LoginRequest(email, password);
                 Call<LoginResponse> call = authorizeService.login(request);
-                    call.enqueue(new Callback<LoginResponse>() {
-                        @Override
-                        public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                            if (response.isSuccessful() && response.body() != null) {
-                                LoginResponse loginResponse = response.body();
+                call.enqueue(new Callback<LoginResponse>() {
+                    @Override
+                    public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            LoginResponse loginResponse = response.body();
 
-                                if (loginResponse.isSuccess()) {
-                                    String token = loginResponse.getData().getToken(); // ✅ Lấy token
-                                    String email = getEmailFromToken(token);
-                                    Log.d("TOKEN_EMAIL", "Email from token: " + email);
-                                    // Lưu token vào SharedPreferences
-                                    SharedPreferences sharedPreferences = getSharedPreferences("user_data", MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                                    editor.putString("token", token);
-                                    editor.putString("email", email);
-                                    editor.apply();
+                            if (loginResponse.isSuccess()) {
+                                String token = loginResponse.getData().getToken();
+                                String email = getEmailFromToken(token);
+                                String userId = getUserIdFromToken(token);
+                                Log.d("LOGIN_SUCCESS", "Token: " + (token != null ? "present" : "null"));
+                                Log.d("LOGIN_SUCCESS", "Token length: " + (token != null ? token.length() : 0));
+                                Log.d("LOGIN_SUCCESS",
+                                        "Token starts with: "
+                                                + (token != null && token.length() > 10 ? token.substring(0, 10) + "..."
+                                                        : token));
+                                Log.d("LOGIN_SUCCESS", "Email: " + email);
+                                Log.d("LOGIN_SUCCESS", "User ID: " + userId);
 
-                                    // Show a success message and navigate to the main activity
-                                    Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class); // Change to your main activity
-                                    startActivity(intent);
-                                    finish();
-                                } else {
-                                    // Login failed
-                                    Toast.makeText(LoginActivity.this, "Login failed: " + loginResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
+                                // Save login info using utility
+                                PrefsHelper.saveLoginInfo(LoginActivity.this, token, email, userId);
+
+                                // Verify saved data
+                                boolean isLoggedIn = PrefsHelper.isLoggedIn(LoginActivity.this);
+                                Log.d("LOGIN_VERIFY", "Is logged in after save: " + isLoggedIn);
+                                String savedToken = PrefsHelper.getToken(LoginActivity.this);
+                                Log.d("LOGIN_VERIFY", "Saved token matches: " + token.equals(savedToken));
+
+                                // Show a success message and navigate to the main activity
+                                Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class); // Change to your
+                                                                                                    // main activity
+                                startActivity(intent);
+                                finish();
                             } else {
-                                Toast.makeText(LoginActivity.this, "Login failed. Please try again.", Toast.LENGTH_SHORT).show();
+                                // Login failed
+                                Toast.makeText(LoginActivity.this, "Login failed: " + loginResponse.getMessage(),
+                                        Toast.LENGTH_SHORT).show();
                             }
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Login failed. Please try again.", Toast.LENGTH_SHORT)
+                                    .show();
                         }
+                    }
 
                     @Override
                     public void onFailure(Call<LoginResponse> call, Throwable t) {
@@ -131,12 +147,14 @@ public class LoginActivity extends BaseActivity {
     }
 
     public static String getEmailFromToken(String token) {
-        if (token == null) return null; // Tránh null
+        if (token == null)
+            return null; // Tránh null
 
         try {
             String[] parts = token.split("\\."); // Phải dùng \\.
 
-            if (parts.length != 3) return null; // JWT có 3 phần
+            if (parts.length != 3)
+                return null; // JWT có 3 phần
 
             String payload = parts[1];
             byte[] decodedBytes = android.util.Base64.decode(payload, android.util.Base64.URL_SAFE);
@@ -144,6 +162,40 @@ public class LoginActivity extends BaseActivity {
 
             JSONObject jsonObject = new JSONObject(decodedPayload);
             return jsonObject.optString("email");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String getUserIdFromToken(String token) {
+        if (token == null)
+            return null;
+
+        try {
+            String[] parts = token.split("\\.");
+            if (parts.length != 3)
+                return null;
+
+            String payload = parts[1];
+            byte[] decodedBytes = android.util.Base64.decode(payload, android.util.Base64.URL_SAFE);
+            String decodedPayload = new String(decodedBytes, "UTF-8");
+
+            JSONObject jsonObject = new JSONObject(decodedPayload);
+
+            // Try different possible field names for user ID
+            String userId = jsonObject.optString("userId", null);
+            if (userId == null || userId.isEmpty()) {
+                userId = jsonObject.optString("customerId", null);
+            }
+            if (userId == null || userId.isEmpty()) {
+                userId = jsonObject.optString("sub", null); // JWT standard subject field
+            }
+            if (userId == null || userId.isEmpty()) {
+                userId = jsonObject.optString("id", null);
+            }
+
+            return userId;
         } catch (Exception e) {
             e.printStackTrace();
             return null;

@@ -1,14 +1,30 @@
 package com.example.man_zone.Model;
 
-import java.util.Date;
+import java.time.Instant;
 
 public class ConversationModel {
     private int id;
-    private int userId;
+    private Integer userId;
     private String email;
     private String title;
-    private Date createdAt;
-    private Date updatedAt;
+    private boolean done;
+    private Instant createdAt;
+    private Instant updatedAt;
+
+    // Constructors
+    public ConversationModel() {
+    }
+
+    public ConversationModel(int id, Integer userId, String email, String title, boolean done, Instant createdAt,
+            Instant updatedAt) {
+        this.id = id;
+        this.userId = userId;
+        this.email = email;
+        this.title = title;
+        this.done = done;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 
     // Getters and Setters
     public int getId() {
@@ -19,11 +35,11 @@ public class ConversationModel {
         this.id = id;
     }
 
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
@@ -43,19 +59,27 @@ public class ConversationModel {
         this.title = title;
     }
 
-    public Date getCreatedAt() {
+    public boolean isDone() {
+        return done;
+    }
+
+    public void setDone(boolean done) {
+        this.done = done;
+    }
+
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Date getUpdatedAt() {
+    public Instant getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
+    public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
     }
 }

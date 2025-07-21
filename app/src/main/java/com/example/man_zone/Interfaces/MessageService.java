@@ -6,13 +6,14 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.Header;
 
 public interface MessageService {
-    @GET("conversations/{conversationId}/messages")
+    @GET("api/conversations/{conversationId}/messages")
     Call<MessageResponse> getMessages(
-        @Path("conversationId") int conversationId,
-        @Query("page") int page,
-        @Query("size") int size,
-        @Query("sort") String sort
-    );
+            @Header("Authorization") String authorization,
+            @Path("conversationId") int conversationId,
+            @Query("page") int page,
+            @Query("size") int size,
+            @Query("sort") String sort);
 }

@@ -57,6 +57,14 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
 
+    // WebSocket dependencies for chat
+    implementation("org.java-websocket:Java-WebSocket:1.5.4")
+    implementation("com.neovisionaries:nv-websocket-client:2.14")
+
+    // ViewModel and LiveData
+    implementation("androidx.lifecycle:lifecycle-viewmodel:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-livedata:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-common:2.7.0")
 
     // Google Maps dependencies
     implementation("com.google.android.gms:play-services-maps:19.0.0")

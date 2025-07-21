@@ -25,6 +25,7 @@ import com.example.man_zone.Adapter.SliderAdapter;
 import com.example.man_zone.Model.ProductModel;
 import com.example.man_zone.Model.SliderModel;
 import com.example.man_zone.R;
+import com.example.man_zone.Utils.PrefsHelper;
 import com.example.man_zone.ViewModel.MainViewModel;
 import com.example.man_zone.databinding.ActivityMainBinding;
 
@@ -68,6 +69,13 @@ public class MainActivity extends BaseActivity {
         TextView mainName = findViewById(R.id.tvNameMain);
         String userName = sharedPreferences.getString("email", "N/A");
         mainName.setText(userName);
+
+        // Migrate old preferences and get updated email
+        PrefsHelper.migrateOldPrefs(this);
+        String currentEmail = PrefsHelper.getEmail(this);
+        if (!currentEmail.isEmpty()) {
+            mainName.setText(currentEmail);
+        }
 
         binding.btnCart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,7 +157,8 @@ public class MainActivity extends BaseActivity {
         binding.progressBar.setVisibility(View.VISIBLE);
         viewModel.getCategories().observe(this, categories -> {
             if (categories != null && !categories.isEmpty()) {
-                binding.recyclerViewCategory.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+                binding.recyclerViewCategory
+                        .setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
                 CategoryAdapter categoryAdapter = new CategoryAdapter(categories);
                 binding.recyclerViewCategory.setAdapter(categoryAdapter);
             } else {
